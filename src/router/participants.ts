@@ -39,6 +39,11 @@ export const participantsRoute = new Hono()
   })
   .delete("/:id", async (c) => {
     const id = c.req.param("id");
-    await prisma.participants.delete({ where: { id: id } });
-    return c.json({ participant: `deleted ${id}` });
+    try {
+       await prisma.participants.delete({ where: { id: id } });
+      return c.json({ participant: `deleted ${id}` });
+    }
+    catch (error) {
+      return c.json({ message: "Failed to delete event. ID might not exist." }, 400);
+    }
   });
